@@ -36,7 +36,7 @@ public class Main {
 
         if (developerMode) {
 
-            logFolder = "main/logs/" + getNowAsString();
+            logFolder = "../../../logs/" + getNowAsString();
 
             File directory = new File(logFolder);
 
