@@ -1,10 +1,8 @@
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.ArrayList;
 
 
 public class Main {
@@ -19,7 +17,7 @@ public class Main {
     private static ArrayList<Motorcycle> motorcycles = new ArrayList<>();
     private static ArrayList<Truck> trucks = new ArrayList<>();
 
-    private static ArrayList<ArrayList> groupedVehicles = new ArrayList<>();
+    private static ArrayList<Vehicle> groupedVehicles = new ArrayList<>();
 
     private static ArrayList<Integer> truckNumbers = new ArrayList<>();
 
@@ -163,11 +161,13 @@ public class Main {
 
 
     public static Boolean getDeveloperMode() {
+
         return developerMode;
     }
 
 
     public static String getLogFolder() {
+
         return logFolder;
     }
 
@@ -182,55 +182,37 @@ public class Main {
 
     private static void groupVehicles() {
 
-        cars.forEach(car->{
-            ArrayList<String> tempCar = new ArrayList<>();
-            tempCar.add(car.name);
-            tempCar.add(String.valueOf(car.distanceTraveled));
-            tempCar.add("car");
-            groupedVehicles.add(tempCar);
-        });
+        for (int i = 0; i < 10; i++) {
+            groupedVehicles.add(new Vehicle(cars.get(i).name, "car", cars.get(i).distanceTraveled));
 
-        motorcycles.forEach(motor->{
-            ArrayList<String> tempMotor = new ArrayList<>();
-            tempMotor.add(motor.name);
-            tempMotor.add(String.valueOf(motor.distanceTraveled));
-            tempMotor.add("motorcycle");
-            groupedVehicles.add(tempMotor);
-        });
+            groupedVehicles.add(new Vehicle(motorcycles.get(i).name,
+                                                "motorcycle", motorcycles.get(i).distanceTraveled));
 
-        trucks.forEach(truck->{
-            ArrayList<String> tempTruck = new ArrayList<>();
-            tempTruck.add(String.valueOf(truck.name));
-            tempTruck.add(String.valueOf(truck.distanceTraveled));
-            tempTruck.add("truck");
-            groupedVehicles.add(tempTruck);
-        });
+            groupedVehicles.add(new Vehicle(Integer.toString(trucks.get(i).name),
+                                                          "truck", trucks.get(i).distanceTraveled));
+        }
 
     }
 
 
     private static void sortGroupedVehicles() {
 
-        for (int i = 0; i < groupedVehicles.size()-1; i++) {
-            for (int j = 0; j < groupedVehicles.size()-1; j++) {
-                if (Integer.parseInt(groupedVehicles.get(j).get(1).toString()) < Integer.parseInt(groupedVehicles.get(j + 1).get(1).toString())) {
-                    ArrayList temp = groupedVehicles.get(j);
-                    groupedVehicles.set(j, groupedVehicles.get(j+1));
-                    groupedVehicles.set(j+1, temp);
-                }
-            }
-        }
+        Collections.sort(groupedVehicles, Comparator.comparing(Vehicle::getDistanceTraveled).reversed());
 
     }
 
 
     private static void printRaceResultsExtra() {
 
-        System.out.printf("%-22s %-13s %s%n", "VEHICLE", "TYPE", "DISTANCE");
+        int counter = 0;
 
-        groupedVehicles.forEach(vehicle -> {
-            System.out.printf("%-22s %-13s %6d%n", vehicle.get(0), vehicle.get(2), Integer.parseInt(vehicle.get(1).toString()));
-        });
+        System.out.printf("%3s  %-22s %-13s %s%n", "#", "VEHICLE", "TYPE", "DISTANCE");
+
+        for (Vehicle vehicle : groupedVehicles) {
+            System.out.printf("%3d. %-22s %-13s %6d%n", ++counter, vehicle.getName(),
+                                                            vehicle.getType(), vehicle.getDistanceTraveled());
+        }
+
     }
 
 
